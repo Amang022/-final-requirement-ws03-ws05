@@ -1,9 +1,0 @@
-#!/bin/sh
-# Optional git hook: run database password update after pull.
-# Install by setting: git config core.hooksPath hooks
-
-if command -v php >/dev/null 2>&1; then
-    php scripts/update_superadmin_password.php
-else
-    echo "PHP not found in PATH. Skipping superadmin password update."
-fi
