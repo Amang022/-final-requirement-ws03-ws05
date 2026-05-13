@@ -60,6 +60,31 @@ Move/copy the folder to your `htdocs` (XAMPP) or `www` (WAMP) directory.
 >
 > If you imported the schema before this fix, re-import `database/schema.sql` or reset the `superadmin@agri.local` password via phpMyAdmin.
 
+### 6. Update database after pulling changes
+After pulling code that updates database values, run the helper script to apply the latest password migration:
+
+```bash
+php scripts/update_superadmin_password.php
+```
+
+This will update the Super Admin password in your local database to the current default.
+
+If you want to run the SQL migration directly instead:
+
+```bash
+mysql -u root -p agri_inventory < database/migrations/001-reset-superadmin-password.sql
+```
+
+### Optional: auto-run after git pull
+A sample post-merge hook is available at `hooks/post-merge`.
+To enable it for your local clone:
+
+```bash
+git config core.hooksPath hooks
+```
+
+This hook will execute `php scripts/update_superadmin_password.php` after each pull, if PHP is available.
+
 ---
 
 ## 🔐 Security Implementation
