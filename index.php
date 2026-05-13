@@ -36,7 +36,6 @@ $success = flash('success');
     <div class="auth-tabs">
         <button class="tab-btn active" onclick="showTab('login')">Login</button>
         <button class="tab-btn" onclick="showTab('signup')">Sign Up</button>
-        <button class="tab-btn" onclick="showTab('forgot')">Forgot Password</button>
     </div>
 
     <?php if ($error): ?>
@@ -94,21 +93,6 @@ $success = flash('success');
             </div>
 
             <button type="submit" class="btn btn-primary btn-full">Sign Up</button>
-        </form>
-    </div>
-
-    <div id="forgot-tab" class="auth-form">
-        <form method="POST" action="<?= BASE_URL ?>/auth/forgot.php">
-            <?php csrf_field(); ?>
-
-            <div class="form-group">
-                <label for="forgot-email">Email Address</label>
-                <input type="email" id="forgot-email" name="email"
-                       placeholder="you@example.com"
-                       required autocomplete="email">
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-full">Reset Password</button>
         </form>
     </div>
 </div>
