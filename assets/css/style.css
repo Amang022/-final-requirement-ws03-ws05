@@ -14,7 +14,7 @@
     --green-light:  #40916c;
     --green-pale:   #d8f3dc;
     --earth:        #b5835a;
-    --earth-light:  #f4e4d2;
+    --earth-light:  #f4e4d2; 
     --bg:           #f5f7f4;
     --surface:      #ffffff;
     --border:       #dde4d8;
@@ -69,11 +69,18 @@ body {
     border-radius: var(--radius);
     font-size: .9rem; transition: background .15s, color .15s;
 }
-.navbar-nav a:hover { background: rgba(255,255,255,.12); color: #fff; }
+.navbar-nav a:hover { background: rgba(226, 220, 220); color: #fff; }
 .navbar-user {
     display: flex; align-items: center; gap: 12px;
-    color: rgba(255,255,255,.75); font-size: .875rem;
+    color: rgba(255,255,255,.9); font-size: .875rem;
     white-space: nowrap;
+}
+.navbar-user a {
+    color: #fff;
+    border-color: rgba(255,255,255,.85);
+}
+.navbar-user a:hover {
+    background: rgba(255,255,255,.15);
 }
 
 /* ── Main content ── */
