@@ -53,16 +53,4 @@ agri-inventory/
 ├── database/
 │   └── agri_inventory.sql ← Database schema & seed data
 └── README.md              ← Documentation
-```
 
-## 🚀 Quick Setup
-1. **Clone the repository**: `git clone https://github.com/your-username/agri-inventory.git`
-2. **Move to web server**: Place the folder in your `htdocs` (XAMPP) or `www` (WAMP) directory.
-3. **Database Setup**: Create a database and import the `database/agri_inventory.sql` file.
-4. **Configure Connection**: Edit `config/db.php` with your database credentials.
-
-
-## 🧑‍💻 Development Team
-- **Olympio Corpuz** (Frontend Developer)
-- **Mark Christian Mendoza** (Frontend Developer)
-- **Chester Wesley Yuzon** (Backend Developer)
