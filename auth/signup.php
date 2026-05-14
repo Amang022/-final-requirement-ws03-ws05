@@ -1,12 +1,13 @@
 <?php
 // =============================================================
-// auth/signup.php — Sign up POST handler
+// auth/signup.php — Sign up POST handler (secured)
 // =============================================================
 
 define('BASE_URL', '..');
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/csrf.php';
 require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../includes/security.php';
 require_once __DIR__ . '/../auth/session.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -17,16 +18,36 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 csrf_validate();
 
 // 2. Sanitize inputs
-$name      = trim($_POST['name'] ?? '');
-$email     = trim($_POST['email'] ?? '');
+$name      = sanitize_input($_POST['name'] ?? '');
+$email     = sanitize_input($_POST['email'] ?? '');
 $password  = $_POST['password'] ?? '';
 
-if (empty($name) || empty($email) || strlen($password) < 8) {
-    flash('error', 'All fields required and password must be at least 8 characters.');
+// 3. Validate required fields
+if (empty($name) || empty($email) || empty($password)) {
+    flash('error', 'All fields are required.');
     redirect(BASE_URL . '/index.php');
 }
 
-// 3. Check duplicate email
+// 4. Validate name length (prevent excessively long names)
+if (strlen($name) > 100) {
+    flash('error', 'Name must not exceed 100 characters.');
+    redirect(BASE_URL . '/index.php');
+}
+
+// 5. Validate email format
+if (!is_valid_email($email)) {
+    flash('error', 'Please enter a valid email address.');
+    redirect(BASE_URL . '/index.php');
+}
+
+// 6. Validate password strength
+$pw_error = validate_password($password);
+if ($pw_error !== null) {
+    flash('error', $pw_error);
+    redirect(BASE_URL . '/index.php');
+}
+
+// 7. Check duplicate email (prepared statement)
 $stmt = mysqli_prepare($conn,
     "SELECT id FROM users WHERE email = ? LIMIT 1"
 );
@@ -40,10 +61,10 @@ if (mysqli_fetch_assoc($result)) {
 }
 mysqli_stmt_close($stmt);
 
-// 4. Hash password
+// 8. Hash password with bcrypt (cost 12)
 $hashed = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
 
-// 5. Insert user (regular, pending approval)
+// 9. Insert user as regular role
 $stmt = mysqli_prepare($conn,
     "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'regular')"
 );
@@ -52,9 +73,9 @@ mysqli_stmt_execute($stmt);
 $user_id = mysqli_insert_id($conn);
 mysqli_stmt_close($stmt);
 
-// 6. Log activity (no user logged in, so no user_id)
+// 10. Log the signup activity
 log_activity(null, 'signup', $email);
 
-flash('success', 'Account created successfully! Please wait for admin approval.');
+flash('success', 'Account created successfully! Please log in.');
 redirect(BASE_URL . '/index.php');
 ?>

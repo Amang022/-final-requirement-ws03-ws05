@@ -9,7 +9,9 @@ require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/csrf.php';
 require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../includes/hash.php';
+require_once __DIR__ . '/../includes/security.php';
 
+send_security_headers();
 require_login(['admin','super_admin']);
 
 $role    = current_role();
@@ -24,8 +26,8 @@ $success = flash('success');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_user'])) {
     csrf_validate();
 
-    $name      = trim($_POST['name'] ?? '');
-    $email     = trim($_POST['email'] ?? '');
+    $name      = sanitize_input($_POST['name'] ?? '');
+    $email     = sanitize_input($_POST['email'] ?? '');
     $password  = $_POST['password'] ?? '';
     $new_role  = $_POST['role'] ?? 'regular';
 
@@ -39,8 +41,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_user'])) {
         redirect(BASE_URL . '/pages/users.php');
     }
 
-    if (empty($name) || empty($email) || strlen($password) < 8) {
-        flash('error', 'All fields required and password must be at least 8 characters.');
+    if (empty($name) || empty($email) || empty($password)) {
+        flash('error', 'All fields are required.');
+        redirect(BASE_URL . '/pages/users.php');
+    }
+
+    if (!is_valid_email($email)) {
+        flash('error', 'Please enter a valid email address.');
+        redirect(BASE_URL . '/pages/users.php');
+    }
+
+    $pw_error = validate_password($password);
+    if ($pw_error !== null) {
+        flash('error', $pw_error);
         redirect(BASE_URL . '/pages/users.php');
     }
 
@@ -79,8 +92,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_password'])) {
     $target_id  = decode_id($hash, 'users');
     $new_pass   = $_POST['new_password'] ?? '';
 
-    if (!$target_id || strlen($new_pass) < 8) {
-        flash('error', 'Invalid request or password too short.');
+    if (!$target_id) {
+        flash('error', 'Invalid request.');
+        redirect(BASE_URL . '/pages/users.php');
+    }
+
+    $pw_error = validate_password($new_pass);
+    if ($pw_error !== null) {
+        flash('error', $pw_error);
         redirect(BASE_URL . '/pages/users.php');
     }
 
@@ -259,7 +278,7 @@ mysqli_stmt_close($stmt);
                 <input type="email" name="email" required placeholder="juan@example.com">
             </div>
             <div class="form-group">
-                <label>Password (min 8 chars)</label>
+                <label>Password (min 8 chars, upper + lower + number)</label>
                 <input type="password" name="password" required minlength="8">
             </div>
             <?php if ($role === 'super_admin'): ?>
@@ -293,7 +312,7 @@ mysqli_stmt_close($stmt);
             <input type="hidden" name="reset_password" value="1">
             <input type="hidden" name="user_hash" id="resetUserHash">
             <div class="form-group">
-                <label>New Password (min 8 chars)</label>
+                <label>New Password (min 8 chars, upper + lower + number)</label>
                 <input type="password" name="new_password" required minlength="8">
             </div>
             <div class="modal-footer">
