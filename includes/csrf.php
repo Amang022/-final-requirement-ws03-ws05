@@ -4,6 +4,7 @@
 // =============================================================
 
 if (session_status() === PHP_SESSION_NONE) {
+    session_name('AGRI_SESSID');
     session_start();
 }
 

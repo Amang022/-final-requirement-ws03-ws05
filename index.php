@@ -7,6 +7,9 @@ define('BASE_URL', '.');
 require_once __DIR__ . '/auth/session.php';
 require_once __DIR__ . '/includes/csrf.php';
 require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/security.php';
+
+send_security_headers();
 
 // Already logged in? Go to dashboard
 if (!empty($_SESSION['user_id'])) {
@@ -86,7 +89,7 @@ $success = flash('success');
             </div>
 
             <div class="form-group">
-                <label for="signup-password">Password (min 8 chars)</label>
+                <label for="signup-password">Password (min 8 chars, upper + lower + number)</label>
                 <input type="password" id="signup-password" name="password"
                        placeholder="••••••••"
                        required minlength="8" autocomplete="new-password">
