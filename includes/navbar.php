@@ -17,7 +17,7 @@ $role = current_role();
         <?php endif; ?>
     </ul>
     <div class="navbar-user">
-        <span><?= e($_SESSION['user_name'] ?? '') ?></span>
+        <a href="<?= BASE_URL ?>/pages/profile.php"><?= e($_SESSION['user_name'] ?? '') ?></a>
         <a href="<?= BASE_URL ?>/auth/logout.php" class="btn btn-sm btn-outline">Logout</a>
     </div>
 </nav>

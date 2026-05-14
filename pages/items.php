@@ -37,6 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_item'])) {
         redirect(BASE_URL . '/pages/items.php');
     }
 
+    $allowed_categories = ['Grains', 'Vegetables', 'Fruits', 'Root Crops', 'Fertilizers', 'Chemicals', 'Supplies', 'Equipment'];
+    $allowed_units = ['kg', 'pcs', 'bags', 'liters', 'sacks'];
+
+    if (!in_array($category, $allowed_categories) || !in_array($unit, $allowed_units)) {
+        flash('error', 'Invalid category or unit selected.');
+        redirect(BASE_URL . '/pages/items.php');
+    }
+
     // All users can add items directly (unlimited/approved)
     $status = 'approved';
 
@@ -84,6 +92,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_item'])) {
     $quantity = (float)($_POST['quantity'] ?? 0);
     $unit     = trim($_POST['unit'] ?? '');
     $desc     = trim($_POST['description'] ?? '');
+
+    $allowed_categories = ['Grains', 'Vegetables', 'Fruits', 'Root Crops', 'Fertilizers', 'Chemicals', 'Supplies', 'Equipment'];
+    $allowed_units = ['kg', 'pcs', 'bags', 'liters', 'sacks'];
+
+    if (!in_array($category, $allowed_categories) || !in_array($unit, $allowed_units)) {
+        flash('error', 'Invalid category or unit selected.');
+        redirect(BASE_URL . '/pages/items.php');
+    }
 
     $stmt = mysqli_prepare($conn,
         "UPDATE items SET name=?, category=?, quantity=?, unit=?, description=? WHERE id=?"
@@ -268,11 +284,28 @@ if ($action === 'edit' && in_array($role, ['admin','super_admin'])) {
             <div class="form-row">
                 <div class="form-group">
                     <label>Category</label>
-                    <input type="text" name="category" required placeholder="e.g. Grains">
+                    <select name="category" required>
+                        <option value="" disabled selected>Select Category</option>
+                        <option value="Grains">Grains</option>
+                        <option value="Vegetables">Vegetables</option>
+                        <option value="Fruits">Fruits</option>
+                        <option value="Root Crops">Root Crops</option>
+                        <option value="Fertilizers">Fertilizers</option>
+                        <option value="Chemicals">Chemicals</option>
+                        <option value="Supplies">Supplies</option>
+                        <option value="Equipment">Equipment</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Unit</label>
-                    <input type="text" name="unit" required placeholder="e.g. kg, pcs, bag">
+                    <select name="unit" required>
+                        <option value="" disabled selected>Select Unit</option>
+                        <option value="kg">kg</option>
+                        <option value="pcs">pcs</option>
+                        <option value="bags">bags</option>
+                        <option value="liters">liters</option>
+                        <option value="sacks">sacks</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
@@ -311,11 +344,26 @@ if ($action === 'edit' && in_array($role, ['admin','super_admin'])) {
             <div class="form-row">
                 <div class="form-group">
                     <label>Category</label>
-                    <input type="text" name="category" required value="<?= e($edit_item['category']) ?>">
+                    <select name="category" required>
+                        <option value="Grains" <?= $edit_item['category'] === 'Grains' ? 'selected' : '' ?>>Grains</option>
+                        <option value="Vegetables" <?= $edit_item['category'] === 'Vegetables' ? 'selected' : '' ?>>Vegetables</option>
+                        <option value="Fruits" <?= $edit_item['category'] === 'Fruits' ? 'selected' : '' ?>>Fruits</option>
+                        <option value="Root Crops" <?= $edit_item['category'] === 'Root Crops' ? 'selected' : '' ?>>Root Crops</option>
+                        <option value="Fertilizers" <?= $edit_item['category'] === 'Fertilizers' ? 'selected' : '' ?>>Fertilizers</option>
+                        <option value="Chemicals" <?= $edit_item['category'] === 'Chemicals' ? 'selected' : '' ?>>Chemicals</option>
+                        <option value="Supplies" <?= $edit_item['category'] === 'Supplies' ? 'selected' : '' ?>>Supplies</option>
+                        <option value="Equipment" <?= $edit_item['category'] === 'Equipment' ? 'selected' : '' ?>>Equipment</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Unit</label>
-                    <input type="text" name="unit" required value="<?= e($edit_item['unit']) ?>">
+                    <select name="unit" required>
+                        <option value="kg" <?= $edit_item['unit'] === 'kg' ? 'selected' : '' ?>>kg</option>
+                        <option value="pcs" <?= $edit_item['unit'] === 'pcs' ? 'selected' : '' ?>>pcs</option>
+                        <option value="bags" <?= $edit_item['unit'] === 'bags' ? 'selected' : '' ?>>bags</option>
+                        <option value="liters" <?= $edit_item['unit'] === 'liters' ? 'selected' : '' ?>>liters</option>
+                        <option value="sacks" <?= $edit_item['unit'] === 'sacks' ? 'selected' : '' ?>>sacks</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
