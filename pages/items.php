@@ -37,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_item'])) {
         redirect(BASE_URL . '/pages/items.php');
     }
 
-    // Regular users: status = pending; admins: status = approved
-    $status = in_array($role, ['admin','super_admin']) ? 'approved' : 'pending';
+    // All users can add items directly (unlimited/approved)
+    $status = 'approved';
 
     $stmt = mysqli_prepare($conn,
         "INSERT INTO items (name, category, quantity, unit, description, status, added_by)
@@ -283,9 +283,7 @@ if ($action === 'edit' && in_array($role, ['admin','super_admin'])) {
                 <label>Description (optional)</label>
                 <textarea name="description" rows="3" placeholder="Additional details…"></textarea>
             </div>
-            <?php if ($role === 'regular'): ?>
-            <p class="text-muted text-sm">Note: Your item will be submitted for admin approval before appearing in the inventory.</p>
-            <?php endif; ?>
+
             <div class="modal-footer">
                 <button type="button" onclick="closeModal('addItemModal')" class="btn btn-outline">Cancel</button>
                 <button type="submit" class="btn btn-primary">Submit Item</button>
