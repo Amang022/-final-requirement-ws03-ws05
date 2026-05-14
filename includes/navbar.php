@@ -6,7 +6,7 @@ $role = current_role();
 ?>
 <nav class="navbar">
     <div class="navbar-brand">
-        <span>🌾</span> AgriStock
+        <span>🌾</span> HarvestHub
     </div>
     <ul class="navbar-nav">
         <li><a href="<?= BASE_URL ?>/dashboard.php">Dashboard</a></li>

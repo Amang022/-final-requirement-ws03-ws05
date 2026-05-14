@@ -1,7 +1,7 @@
-# 🌾 AgriStock — Agricultural Inventory System
+# 🌾 HarvestHub — Agricultural Inventory System
 
 ## Overview
-AgriStock is a web-based agricultural inventory management system designed to streamline the tracking of crops, fertilizers, tools, and other supplies. It features a modern, premium user interface, robust security, and role-based access control to help farmers and administrators efficiently manage their stock.
+HarvestHub is a web-based agricultural inventory management system designed to streamline the tracking of crops, fertilizers, tools, and other supplies. It features a modern, premium user interface, robust security, and role-based access control to help farmers and administrators efficiently manage their stock.
 
 ## How It Works
 The system allows users to seamlessly manage inventory through an intuitive dashboard. 
@@ -16,7 +16,7 @@ The system allows users to seamlessly manage inventory through an intuitive dash
 - **Regular User**: Can view and search the active inventory, and seamlessly add new items to the stock without arbitrary limits.
 
 ## 🔐 Data Security Implementation
-AgriStock implements several crucial security layers to protect the database and users:
+HarvestHub implements several crucial security layers to protect the database and users:
 
 | Threat | Implementation |
 |---|---|
@@ -60,7 +60,7 @@ agri-inventory/
 2. **Move to web server**: Place the folder in your `htdocs` (XAMPP) or `www` (WAMP) directory.
 3. **Database Setup**: Create a database and import the `database/agri_inventory.sql` file.
 4. **Configure Connection**: Edit `config/db.php` with your database credentials.
-5. **Login**: Use the default Super Admin account (`superadmin@agri.local` / `Admin@1234`). *Please change this password immediately!*
+
 
 ## 🧑‍💻 Development Team
 - **Olympio Corpuz** (Frontend Developer)
